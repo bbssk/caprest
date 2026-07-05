@@ -1,0 +1,45 @@
+@baseUrl = http://localhost:4004
+
+### REST - Get All Categories (entity)
+GET {{baseUrl}}/rest/rest/Categories
+
+###
+
+### REST - getCategories action
+POST {{baseUrl}}/rest/rest/getCategories
+Content-Type: application/json
+
+{}
+
+###
+
+### OData - Get All Categories (entity)
+GET {{baseUrl}}/odata/v4/odata/Categories
+
+###
+
+### OData - getCategories action
+POST {{baseUrl}}/odata/v4/odata/getCategories
+Content-Type: application/json
+
+{}
+
+###
+
+### REST - Upload CSV file
+POST {{baseUrl}}/rest/rest/uploadFile
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="file"; filename="sample.csv"
+Content-Type: text/csv
+
+ID,name,age
+1,Alice,30
+2,Bob,25
+--boundary--
+
+###
+
+### REST - Get all uploaded files
+GET {{baseUrl}}/rest/rest/FileUploads
