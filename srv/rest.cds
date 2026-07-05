@@ -2,7 +2,7 @@
 using { cap.rest.db as db } from '../db/db';
 
 @protocol: 'rest'
-service rest {
+service rest @(path:'/api/document/upload'){
     entity Categories  as projection on db.Categories;
     entity FileUploads as projection on db.FileUploads;
 

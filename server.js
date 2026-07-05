@@ -9,7 +9,7 @@ const upload = multer({ storage: multer.memoryStorage() });
 // body-parser skips req.body when it is already set, so setting req.body = {}
 // prevents it from trying to read the already-consumed stream.
 cds.on('bootstrap', (app) => {
-    app.use('/rest/rest/uploadFile', upload.single('file'), (req, _res, next) => {
+    app.use('/api/document/upload/uploadFile', upload.single('file'), (req, _res, next) => {
         req.headers['content-type'] = 'application/json';
         req.body = {};
         next();
