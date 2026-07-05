@@ -8,7 +8,9 @@ module.exports = class RestService extends cds.ApplicationService {
 
         this.on('uploadFile', async (req) => {
             const { FileUploads } = this.entities;
-            const file = req._.file;
+            // In CAP 9, req._ = { req: expressRequest, res: expressResponse }
+            // multer writes to expressRequest.file, so the accessor is req._.req.file
+            const file = req._.req?.file ?? req._.file;
 
             if (!file) req.reject(400, 'No file provided. Send a CSV file in form field "file".');
 
