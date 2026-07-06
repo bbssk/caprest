@@ -27,17 +27,15 @@ Content-Type: application/json
 ###
 
 ### REST - Upload CSV file
-POST {{baseUrl}}/rest/rest/uploadFile
-Content-Type: multipart/form-data; boundary=boundary
+POST {{baseUrl}}/api/document/upload/uploadFile
+Content-Type: multipart/form-data; boundary=----FormBoundary7MA4YWxkTrZu0gW
 
---boundary
-Content-Disposition: form-data; name="file"; filename="sample.csv"
+------FormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="file"; filename="testcsv.csv"
 Content-Type: text/csv
 
-ID,name,age
-1,Alice,30
-2,Bob,25
---boundary--
+< ./testcsv.csv
+------FormBoundary7MA4YWxkTrZu0gW--
 
 ###
 
