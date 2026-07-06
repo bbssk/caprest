@@ -1,4 +1,5 @@
 const cds = require('@sap/cds');
+const { PassThrough } = require('stream');
 
 module.exports = class RestService extends cds.ApplicationService {
 
@@ -11,28 +12,24 @@ module.exports = class RestService extends cds.ApplicationService {
     // ─── Handlers ────────────────────────────────────────────────────────────
 
     async onUploadFile(req) {
-        const file = this.getMultipartFile(req);
+        if (!req.data.file) req.reject(400, 'No file provided. Send a file in form field "file".');
 
-        if (!file) req.reject(400, 'No file provided. Send a CSV file in form field "file".');
+        const fileBuffer = await new Promise((resolve, reject) => {
+            const stream = new PassThrough();
+            const chunks = [];
+            stream.on('data',  chunk => chunks.push(chunk));
+            stream.on('end',   ()    => resolve(Buffer.concat(chunks)));
+            stream.on('error', reject);
+            req.data.file.pipe(stream);
+        });
 
-        const { FileUploads } = this.entities;
-
-        await INSERT.into(FileUploads).entries({
-            filename    : file.originalname,
-            mimetype    : file.mimetype,
-            filecontent : file.buffer,
-            filesize    : file.size
+        await INSERT.into(this.entities.FileUploads).entries({
+            filename    : req.data.file.originalname,
+            mimetype    : req.data.file.mimetype,
+            filecontent : fileBuffer,
+            filesize    : req.data.file.size
         });
 
         return 'File uploaded successfully';
-    }
-
-    // ─── Helpers ─────────────────────────────────────────────────────────────
-
-    // multer (server.js bootstrap) parses multipart before CAP touches the request.
-    // CAP 9 exposes the underlying Express request as req._.req
-    getMultipartFile(req) {
-        const expressReq = req._.req ?? req._;
-        return expressReq?.file ?? null;
     }
 };
